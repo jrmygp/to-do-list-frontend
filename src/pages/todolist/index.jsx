@@ -24,7 +24,7 @@ const todoList = () => {
   };
 
   const renderContentList = () => {
-    return contentList.map((val) => {
+    return contentList?.map((val) => {
       return <TodoItem refreshList={fetchTodoList} action={val?.action} id={val?.id} status={val.status} />;
     });
   };
