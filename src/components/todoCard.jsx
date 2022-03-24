@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 import { axiosInstance } from "../config/api";
 
-const TodoItem = ({ action, status, id }) => {
+const TodoItem = ({ action, status, id, refreshList }) => {
   const [contentList, setContentList] = useState([]);
   const [inputAction, setInputAction] = useState("");
   const [inputStatus, setInputStatus] = useState("");
+
   const fetchTodoList = () => {
     axiosInstance.get("/todoLists").then((res) => {
       setContentList(res.data.result);
@@ -14,7 +15,7 @@ const TodoItem = ({ action, status, id }) => {
 
   const deleteList = () => {
     axiosInstance.delete(`/todoLists/${id}`).then(() => {
-      fetchTodoList();
+      refreshList()
     });
   };
 
@@ -33,7 +34,7 @@ const TodoItem = ({ action, status, id }) => {
       status: inputStatus,
     };
     axiosInstance.patch(`todoLists/${id}`, newList).then(() => {
-      fetchTodoList();
+      refreshList()
     });
   };
 

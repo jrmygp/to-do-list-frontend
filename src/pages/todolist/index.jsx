@@ -16,14 +16,16 @@ const todoList = () => {
   const [contentList, setContentList] = useState([]);
   const [newList, setNewList] = useState("");
   const [newStatus, setNewStatus] = useState("");
+
   const fetchTodoList = () => {
     axiosInstance.get("/todoLists").then((res) => {
       setContentList(res.data.result);
     });
   };
+
   const renderContentList = () => {
     return contentList.map((val) => {
-      return <TodoItem action={val?.action} id={val?.id} status={val.status} />;
+      return <TodoItem refreshList={fetchTodoList} action={val?.action} id={val?.id} status={val.status} />;
     });
   };
 
@@ -36,6 +38,7 @@ const todoList = () => {
     const { value } = event.target;
     setNewStatus(value);
   };
+
   const addNewList = () => {
     const newData = {
       action: newList,
