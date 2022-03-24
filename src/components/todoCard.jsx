@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 import { axiosInstance } from "../config/api";
 
 const TodoItem = ({ action, status, id }) => {
   const [contentList, setContentList] = useState([]);
   const [inputAction, setInputAction] = useState("");
-  const [inputStatus, setInputStatus] = useState("")
+  const [inputStatus, setInputStatus] = useState("");
   const fetchTodoList = () => {
     axiosInstance.get("/todoLists").then((res) => {
       setContentList(res.data.result);
@@ -17,31 +17,41 @@ const TodoItem = ({ action, status, id }) => {
       fetchTodoList();
     });
   };
-  
-  const handleActionInput = (event) => {
-      const {value} = event.target
-      setInputAction(value)
 
-  }
+  const handleActionInput = (event) => {
+    const { value } = event.target;
+    setInputAction(value);
+  };
 
   const handleStatusInput = (event) => {
-      const {value} = event.target
-      setInputStatus(value)
-  }
+    const { value } = event.target;
+    setInputStatus(value);
+  };
   const editList = () => {
-      const newList = {
-        action: inputAction,
-        status: inputStatus
-      }
+    const newList = {
+      action: inputAction,
+      status: inputStatus,
+    };
     axiosInstance.patch(`todoLists/${id}`, newList).then(() => {
       fetchTodoList();
     });
   };
 
+  useEffect (() => {
+      fetchTodoList();
+    },[]);
   return (
-    <Box mb={5} border="1px solid gray" padding="5px" borderRadius={8} maxW="450px">
+    <Box
+      mb={5}
+      border="1px solid gray"
+      padding="5px"
+      borderRadius={8}
+      maxW="450px"
+    >
       <Text mr={5}>Action: {action}</Text>
-      <Text mr={5} mb={2}>Status: {status}</Text>
+      <Text mr={5} mb={2}>
+        Status: {status}
+      </Text>
       <Input placeholder="Action" onChange={handleActionInput} mb={2}></Input>
       <Input placeholder="Status" onChange={handleStatusInput} mb={2}></Input>
       <Button colorScheme="green" mr={3} onClick={() => editList(id)}>
